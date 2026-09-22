@@ -4,7 +4,7 @@
 Sun, W. *We Want More from GenAI Dashboards: Designing and Evaluating a Human-in-the-Loop Prototype for Classroom Learning Analytics.*
 
 **Full original materials (interviewee background, prototype generation prompt, interview protocol, original screenshots):**
-📎 OSF repository — https://osf.io/fs8wj/overview?view_only=d39eee85aa324ac9a5847e49e560a3a
+📎 OSF repository — https://osf.io/fs8wj/overview?view_only=d39eee85aa324ac9a5847e49e560a3ab
 
 ---
 
