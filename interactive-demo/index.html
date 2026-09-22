@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Face-to-Face DiscussionLens — Prototype Archive</title>
+<style>
+:root{
+  --blue:#2F6FB0; --blue-lt:#EAF1FB; --blue-bg:#EAF3FC;
+  --purple:#8B5CF6; --green:#22A06B;
+  --amber:#D98A2B; --amber-lt:#FBF0DF; --amber-bg:#FDF3E4;
+  --ink:#1C2B3E; --muted:#6B7686; --rule:#E4E7EC; --bg:#F7F8FA; --white:#fff;
+  --orange-header:#FDEEE3; --red:#E0554F;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:13px}
+
+.archive-banner{background:#1C2B3E;color:#fff;font-size:11.5px;text-align:center;padding:7px 14px;line-height:1.5}
+.archive-banner b{color:#F5C57A}
+
+.app{display:flex;min-height:100vh}
+
+/* left menu */
+.menu{width:160px;flex:none;background:var(--white);border-right:1px solid var(--rule);padding:16px 12px}
+.menu h3{font-size:13px;font-weight:700;margin-bottom:14px}
+.menu-sec{margin-bottom:16px}
+.menu-sec .lbl{font-size:10.5px;color:var(--muted);font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.menu-btn{width:100%;text-align:left;background:var(--white);border:1px solid var(--rule);border-radius:6px;padding:7px 9px;font-size:11px;margin-bottom:6px;color:var(--ink);cursor:default}
+.menu select{width:100%;border:1px solid var(--rule);border-radius:6px;padding:7px 9px;font-size:11px;background:var(--white)}
+.menu .status{margin-top:6px;background:#F3F4F6;border-radius:6px;padding:6px 9px;font-size:10.5px;color:var(--muted)}
+
+/* main */
+.main{flex:1;padding:16px 24px;min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.brand{display:flex;align-items:center;gap:9px}
+.brand .ic{width:28px;height:28px;border-radius:7px;background:var(--blue);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px}
+.brand h1{font-size:14px;font-weight:700}
+.brand .sub{font-size:10.5px;color:var(--muted)}
+.roleswitch{display:flex;background:#EEF0F3;border-radius:8px;padding:3px;gap:2px}
+.roleswitch button{border:none;background:transparent;padding:6px 14px;border-radius:6px;font-size:11.5px;font-weight:600;color:var(--muted);cursor:pointer}
+.roleswitch button.active{background:var(--white);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+
+.tabs{display:flex;gap:8px;margin-bottom:18px}
+.tab{padding:6px 13px;border-radius:7px;font-size:11.5px;font-weight:600;cursor:pointer;border:1px solid transparent;display:flex;align-items:center;gap:5px}
+.tab.student-inactive{background:var(--blue-lt);color:var(--blue)}
+.tab.student-active{background:var(--blue-lt);color:var(--blue);border-color:var(--blue)}
+.tab.teacher-inactive{background:var(--amber-lt);color:var(--amber)}
+.tab.teacher-active{background:var(--amber-lt);color:var(--amber);border-color:var(--amber)}
+
+h2.sect{font-size:14px;font-weight:700;margin-bottom:12px}
+
+.card{background:var(--white);border:1px solid var(--rule);border-radius:10px;margin-bottom:16px;overflow:hidden}
+.card-body{padding:16px}
+.card-hd{padding:11px 16px;font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:7px}
+
+/* behaviour cards */
+.bcards{display:flex;gap:14px;margin-bottom:18px}
+.bcard{flex:1;background:var(--white);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden}
+.bcard .badge{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;margin-bottom:8px}
+.bcard .lbl{font-size:11px;color:var(--muted);margin-bottom:4px}
+.bcard .val{font-size:20px;font-weight:700}
+
+/* accordion */
+.accitem{border:1px solid var(--rule);border-radius:8px;margin-bottom:8px;padding:10px 12px}
+.accitem .row{display:flex;align-items:center;gap:8px;cursor:default}
+.accitem .num{font-size:9.5px;font-weight:700;background:#F1F3F5;color:var(--muted);padding:1px 6px;border-radius:4px}
+.accitem .t{font-size:11.5px;font-weight:600;color:var(--blue);flex:1}
+.accitem .detail{font-size:10.5px;color:var(--muted);margin-top:5px;padding-left:38px}
+.accitem .chev{color:var(--muted);font-size:10px}
+
+.yn-box{margin-top:12px;background:var(--blue-bg);border-radius:8px;padding:12px 14px}
+.yn-box .q{font-size:11.5px;font-weight:600;color:var(--blue);margin-bottom:8px}
+.yn-btn{display:inline-block;border:1px solid var(--rule);background:var(--white);border-radius:6px;padding:5px 16px;font-size:11px;margin-right:8px}
+
+/* skills table */
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:10.5px;color:var(--muted);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--rule)}
+td{padding:10px;font-size:11px;vertical-align:top;border-bottom:1px solid #F0F1F3}
+.sid{background:var(--blue);color:#fff;font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:4px}
+.skillname{font-weight:600;margin-top:2px}
+.desc{color:var(--muted)}
+.understand-q{font-size:9.5px;color:var(--muted);margin-bottom:4px}
+.u-btns{display:flex;gap:5px}
+.u-btn{border:1px solid var(--rule);background:var(--white);border-radius:5px;padding:3px 8px;font-size:9.5px;white-space:nowrap}
+
+/* suggestions */
+.sugg-row{border-bottom:1px solid #F0F1F3;padding:12px 0}
+.sugg-row:last-child{border-bottom:none}
+.sugg-id{font-size:9.5px;font-weight:700;color:var(--blue)}
+.sugg-content{font-size:11.5px;margin:3px 0}
+.sugg-related{font-size:10px;color:var(--muted)}
+.stars{margin:10px 0 8px;font-size:16px;color:#D8DCE2;letter-spacing:2px}
+textarea{width:100%;border:1px solid var(--rule);border-radius:7px;padding:9px 11px;font-size:11px;font-family:inherit;resize:vertical;min-height:56px}
+.submitbtn{margin-top:10px;background:var(--amber);color:#fff;border:none;border-radius:7px;padding:9px;width:100%;font-size:11.5px;font-weight:600}
+.submitbtn.blue{background:var(--blue)}
+
+.script-box{background:#FAFAFB;border-radius:8px;padding:14px 16px;font-size:11.5px;line-height:1.7}
+.script-box ul{margin-left:18px;margin-top:6px}
+
+.tagpill{display:inline-block;background:#EEF0F3;color:var(--muted);font-size:9.5px;padding:2px 8px;border-radius:10px;margin-right:5px}
+
+/* right chat panel */
+.chatpanel{width:230px;flex:none;background:var(--white);border-left:1px solid var(--rule);padding:16px}
+.chat-hd{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.chat-hd .ic{width:26px;height:26px;border-radius:7px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px}
+.chat-hd .t{font-size:11.5px;font-weight:700}
+.chat-hd .s{font-size:9.5px;color:var(--muted)}
+.chat-bubble{background:var(--blue-bg);border-radius:9px;padding:10px 12px;font-size:10.5px;color:var(--blue);line-height:1.5;margin-bottom:14px}
+.chat-input{border:1px solid var(--rule);border-radius:8px;padding:8px 10px;font-size:10.5px;color:var(--muted);margin-bottom:16px}
+.chat-fb{border-top:1px solid var(--rule);padding-top:12px}
+.chat-fb .q{font-size:10px;font-weight:600;margin-bottom:6px}
+.lmh{display:flex;gap:5px;margin-bottom:12px}
+.lmh span{border:1px solid var(--rule);border-radius:5px;padding:3px 8px;font-size:9.5px}
+
+.view{display:none}
+.view.active{display:block}
+.subview{display:none}
+.subview.active{display:block}
+
+/* ===== analysis layer ===== */
+.anno-toggle{display:flex;align-items:center;gap:8px;background:#F3EEFC;border:1px solid #D9CCF5;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:600;color:#6B3FA0;cursor:pointer;user-select:none}
+.anno-toggle .dot{width:8px;height:8px;border-radius:50%;background:#B9A8D6}
+body.anno-on .anno-toggle .dot{background:#7C3AED}
+body.anno-on .anno-toggle{background:#EDE4FB;border-color:#7C3AED}
+
+.anno-badge{display:none;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#7C3AED;color:#fff;font-size:11px;font-weight:700;cursor:pointer;margin-left:7px;flex:none}
+body.anno-on .anno-badge{display:inline-flex}
+
+.anno-panel{display:none;background:#F8F5FE;border:1px solid #DCCEF7;border-left:3px solid #7C3AED;border-radius:8px;padding:10px 13px;margin-top:8px;font-size:10.5px;line-height:1.5;color:var(--ink);font-weight:400}
+.anno-panel *{color:inherit}
+.anno-panel .al{color:#7C3AED !important;font-weight:700}
+.anno-panel .who{color:#7C3AED !important}
+.anno-panel.open{display:block}
+.anno-panel .al{font-size:9px;font-weight:700;color:#7C3AED;text-transform:uppercase;letter-spacing:.04em;margin-top:8px;margin-bottom:2px}
+.anno-panel .al:first-child{margin-top:0}
+.anno-panel .quote{font-style:italic;color:#4B2E7A}
+.anno-panel .who{font-weight:600;color:#7C3AED;font-style:normal}
+.hd-with-badge{display:flex;align-items:center}
+.sect-with-badge{display:flex;align-items:center}
+
+.topbar{flex-wrap:wrap}
+.hd-with-badge{flex-wrap:wrap}
+.sect-with-badge{flex-wrap:wrap}
+.hd-with-badge .anno-panel, .sect-with-badge .anno-panel, .topbar .anno-panel{
+  flex:1 1 100%; order:99; width:100%;
+}
+</style>
+</head>
+<body>
+
+<div class="archive-banner">📦 <b>Permanent archive</b> of the design mockup originally generated via Base44 (system prompt: <i>Multi-Role Learning Dashboard with Human-in-the-Loop Feedback &amp; Multi-Modal Interaction</i>). Content and interactions preserved as specified — this is a design illustration, not an implemented or empirically evaluated system.</div>
+
+<div class="app">
+
+  <!-- LEFT MENU -->
+  <div class="menu">
+    <div class="hd-with-badge"><h3 style="margin-bottom:0">Menu</h3><span class="anno-badge" onclick="toggleAnno('privacy')">i</span>
+<div class="anno-panel" id="anno-privacy">
+  <div class="al">Design requirement</div><b>Data Processing (represented indirectly)</b>
+  <div class="al">Component(s)</div>Data Processing
+  <div class="al">How this is realised here</div>Functions related to Data Processing were represented indirectly through upload and download functions for recordings, documents, transcripts, and reports, rather than a visible processing pipeline.
+</div></div>
+    <div class="menu-sec">
+      <div class="lbl">⬆ Upload Center</div>
+      <div class="menu-btn">Upload Audio Recording</div>
+      <div class="menu-btn">Upload PDF Document</div>
+    </div>
+    <div class="menu-sec">
+      <div class="lbl">⬇ Download Center</div>
+      <div class="menu-btn">Download Transcripts</div>
+      <div class="menu-btn">Download Analytics Reports</div>
+    </div>
+    <div class="menu-sec">
+      <div class="lbl">💬 Interaction Channel</div>
+      <select><option>Text Mode</option><option>Audio Mode</option></select>
+      <div class="status">Current: Text</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="brand">
+        <div class="ic">💬</div>
+        <div><h1>Face-to-Face DiscussionLens</h1><div class="sub">Collaborative Learning Dashboard</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px">
+        <div class="anno-toggle" onclick="toggleAnnoLayer()"><span class="dot"></span><span id="annoLabel">Show Design Analysis</span></div>
+        <div class="hd-with-badge">
+          <div class="roleswitch">
+            <button id="btnStudent" class="active" onclick="setRole('student')">Student View</button>
+            <button id="btnTeacher" onclick="setRole('teacher')">Teacher View</button>
+          </div><span class="anno-badge" onclick="toggleAnno('roles')">i</span>
+<div class="anno-panel" id="anno-roles">
+  <div class="al">Design requirement</div><b>Flexible analytical representation</b>
+  <div class="al">Component(s)</div>Analytical + Feedback and Dashboard
+  <div class="al">How this is realised here</div>Student and Teacher views offered alternative analytical summaries and different input/output formats for the same underlying basis.
+</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ STUDENT VIEW ============ -->
+    <div id="view-student" class="view active">
+      <div class="tabs">
+        <div id="stab-script" class="tab student-inactive" onclick="setSTab('script')">💬 Our CSCL Script</div>
+        <div id="stab-skills" class="tab student-active" onclick="setSTab('skills')">💡 Our Skills &amp; Suggestions</div>
+      </div>
+
+      <div id="ssub-script" class="subview">
+        <div class="card"><div class="card-body">
+          <div class="sect-with-badge"><h2 class="sect" style="margin-bottom:10px">Lesson Plan Evaluation Task Allocation Guide</h2><span class="anno-badge" onclick="toggleAnno('context')">i</span>
+<div class="anno-panel" id="anno-context">
+  <div class="al">Design requirement</div><b>Context-sensitive analytical grounding</b>
+  <div class="al">Component(s)</div>Context
+  <div class="al">How this is realised here</div>The CSCL script and task-allocation guide supplied learning-phase and task information alongside the analytical content.
+</div></div>
+          <div class="script-box">
+            <ul>
+              <li>Efficiently and critically obtain the lesson plan evaluation and revision suggestions you want from the AI assistant.</li>
+              <li>As a suggestion giver, provide revision suggestions with higher acceptance.</li>
+              <li>As a suggestion receiver, respond calmly and objectively to peer feedback on your lesson plan.</li>
+            </ul>
+          </div>
+        </div></div>
+      </div>
+
+      <div id="ssub-skills" class="subview active">
+        <div class="sect-with-badge"><h2 class="sect" style="margin-bottom:0">Behavior Overview</h2><span class="anno-badge" onclick="toggleAnno('behav')">i</span>
+<div class="anno-panel" id="anno-behav">
+  <div class="al">Design requirement</div><b>Traceable representation across abstraction levels</b>
+  <div class="al">Component(s)</div>Data Processing + Analytical + Feedback and Dashboard
+  <div class="al">How this is realised here</div>Behavioural indicators were connected conceptually to challenges, skills, suggestions, and supporting classroom/task materials.
+</div></div>
+        <div class="bcards">
+          <div class="bcard"><div class="badge" style="background:var(--blue)">📋</div><div class="lbl">Communication Participation Rate</div><div class="val">22%</div></div>
+          <div class="bcard"><div class="badge" style="background:var(--purple)">👤</div><div class="lbl">Social Regulation Behavior Rate</div><div class="val">7%</div></div>
+          <div class="bcard"><div class="badge" style="background:var(--green)">✓</div><div class="lbl">Task Regulation &amp; Activity Rate</div><div class="val">71%</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-hd hd-with-badge" style="background:var(--orange-header);color:var(--red)">⚠ Collaborative Problem Solving Challenges<span class="anno-badge" onclick="toggleAnno('challenges')">i</span>
+<div class="anno-panel" id="anno-challenges">
+  <div class="al">Design requirement</div><b>Provenance-aware analytical transparency</b>
+  <div class="al">Component(s)</div>Analytical + Human Oversight + Feedback and Dashboard
+  <div class="al">How this is realised here</div>AI-generated challenge material was presented as an inspectable resource open to user questioning; full provenance implementation was not established by the initial prototype.
+</div></div>
+          <div class="card-body">
+            <div class="accitem">
+              <div class="row"><span class="num">#1</span><span class="t">Group overestimates AI tool capabilities</span><span class="chev">▲</span></div>
+              <div class="detail">Group overestimates AI tool capabilities → Group repeatedly expects AI to "automatically revise the entire lesson plan," but results are unsatisfactory.</div>
+            </div>
+            <div class="accitem"><div class="row"><span class="num">#2</span><span class="t">Group identifies accuracy and logic issues in AI-generated content</span><span class="chev">▼</span></div></div>
+            <div class="accitem"><div class="row"><span class="num">#3</span><span class="t">Group has vague understanding of role division and evaluation mechanisms</span><span class="chev">▼</span></div></div>
+            <div class="accitem"><div class="row"><span class="num">#4</span><span class="t">Technical difficulties in file format conversion</span><span class="chev">▼</span></div></div>
+            <div class="accitem"><div class="row"><span class="num">#5</span><span class="t">Uneven participation</span><span class="chev">▼</span></div></div>
+            <div class="yn-box">
+              <div class="q">Have you encountered similar challenges?</div>
+              <span class="yn-btn">Yes</span><span class="yn-btn">No</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-hd hd-with-badge" style="background:var(--blue-bg);color:var(--blue)">💡 Collaborative Problem Solving Skills (CPS Skills)<span class="anno-badge" onclick="toggleAnno('skills')">i</span>
+<div class="anno-panel" id="anno-skills">
+  <div class="al">Design requirement</div><b>Theory-grounded analytical indicators</b>
+  <div class="al">Component(s)</div>Analytical + Context
+  <div class="al">How this is realised here</div>CPS skill representations were presented as fixed categories with performance examples, grounded in the CPS construct.
+</div></div>
+          <div class="card-body" style="padding:0">
+            <table>
+              <tr><th>ID</th><th>Skill Category</th><th>Description &amp; Performance Example</th><th>Understanding</th></tr>
+              <tr><td><span class="sid">S1</span></td><td class="skillname">Critical Thinking &amp; Problem Identification</td><td class="desc">Able to identify logical errors in AI content and provide feedback</td><td><div class="understand-q">Do you understand this skill?</div><div class="u-btns"><span class="u-btn">✓ Yes</span><span class="u-btn">✕ No</span><span class="u-btn">? Need Explanation</span></div></td></tr>
+              <tr><td><span class="sid">S2</span></td><td class="skillname">Feedback Expression &amp; Revision Suggestion</td><td class="desc">Able to propose specific sentence-level revisions and explain reasons</td><td><div class="understand-q">Do you understand this skill?</div><div class="u-btns"><span class="u-btn">✓ Yes</span><span class="u-btn">✕ No</span><span class="u-btn">? Need Explanation</span></div></td></tr>
+              <tr><td><span class="sid">S3</span></td><td class="skillname">Technical Literacy &amp; Tool Flexibility</td><td class="desc">Proficient in AI interaction, PPT text extraction, document revision</td><td><div class="understand-q">Do you understand this skill?</div><div class="u-btns"><span class="u-btn">✓ Yes</span><span class="u-btn">✕ No</span><span class="u-btn">? Need Explanation</span></div></td></tr>
+              <tr><td><span class="sid">S4</span></td><td class="skillname">Task Management &amp; Collaboration Scheduling</td><td class="desc">Able to clarify group roles and document archiving logic</td><td><div class="understand-q">Do you understand this skill?</div><div class="u-btns"><span class="u-btn">✓ Yes</span><span class="u-btn">✕ No</span><span class="u-btn">? Need Explanation</span></div></td></tr>
+              <tr><td><span class="sid">S5</span></td><td class="skillname">Emotional Regulation &amp; Social Interaction</td><td class="desc">Able to use humor to defuse frustration and avoid task pressure buildup</td><td><div class="understand-q">Do you understand this skill?</div><div class="u-btns"><span class="u-btn">✓ Yes</span><span class="u-btn">✕ No</span><span class="u-btn">? Need Explanation</span></div></td></tr>
+              <tr><td><span class="sid">S6</span></td><td class="skillname">Alternative Strategy Generation &amp; Flexibility</td><td class="desc">Able to quickly find alternative paths when AI fails</td><td><div class="understand-q">Do you understand this skill?</div><div class="u-btns"><span class="u-btn">✓ Yes</span><span class="u-btn">✕ No</span><span class="u-btn">? Need Explanation</span></div></td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-hd hd-with-badge">📈 Suggestions for Enhancing Student Collaborative Problem Solving Behaviors &amp; Skills<span class="anno-badge" onclick="toggleAnno('suggestions')">i</span>
+<div class="anno-panel" id="anno-suggestions">
+  <div class="al">Design requirement</div><b>Human interpretive oversight at consequential decision points</b>
+  <div class="al">Component(s)</div>Human Oversight + Feedback and Dashboard
+  <div class="al">How this is realised here</div>User feedback, helpfulness judgements, and textual revision opportunities were attached to each suggestion.
+</div></div>
+          <div class="card-body">
+            <div class="sugg-row"><span class="sugg-id">R1</span><div class="sugg-content">Introduce AI Output Evaluation Rubric (accuracy, logic, feasibility)</div><div class="sugg-related">Related Skills: S1, S2</div></div>
+            <div class="sugg-row"><span class="sugg-id">R2</span><div class="sugg-content">Design staged role cards: Feedback Giver vs Receiver</div><div class="sugg-related">Related Skills: S4</div></div>
+            <div class="sugg-row"><span class="sugg-id">R3</span><div class="sugg-content">Guide students to use academic feedback language templates</div><div class="sugg-related">Related Skills: S2</div></div>
+            <div class="sugg-row"><span class="sugg-id">R4</span><div class="sugg-content">Strengthen training on prompt usage for AI tools</div><div class="sugg-related">Related Skills: S3</div></div>
+            <div class="sugg-row"><span class="sugg-id">R5</span><div class="sugg-content">Teach backup path flowcharts (when AI fails)</div><div class="sugg-related">Related Skills: S6</div></div>
+            <div class="sugg-row"><span class="sugg-id">R6</span><div class="sugg-content">Use reflection logs to promote team co-construction</div><div class="sugg-related">Related Skills: all</div></div>
+            <div style="margin-top:10px">
+              <div style="font-size:11px;font-weight:600;margin-bottom:4px">Was this suggestion helpful to you?</div>
+              <div class="stars">★★★★★</div>
+              <div style="font-size:11px;font-weight:600;margin-bottom:6px">How would you revise this suggestion?</div>
+              <textarea placeholder="Share your thoughts..."></textarea>
+              <button class="submitbtn blue">Submit Feedback</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ TEACHER VIEW ============ -->
+    <div id="view-teacher" class="view">
+      <div class="tabs">
+        <div id="ttab-script" class="tab teacher-inactive" onclick="setTTab('script')">💬 My CSCL Script</div>
+        <div id="ttab-class" class="tab teacher-active" onclick="setTTab('class')">👥 Class Overview</div>
+        <div id="ttab-research" class="tab teacher-inactive" onclick="setTTab('research')">📚 Research Insights</div>
+      </div>
+
+      <div id="tsub-script" class="subview">
+        <div class="card"><div class="card-body">
+          <h2 class="sect" style="margin-bottom:10px">Lesson Plan Evaluation Task Allocation Guide</h2>
+          <div class="script-box">
+            <ul>
+              <li>Efficiently and critically obtain the lesson plan evaluation and revision suggestions you want from the AI assistant.</li>
+              <li>As a suggestion giver, provide revision suggestions with higher acceptance.</li>
+              <li>As a suggestion receiver, respond calmly and objectively to peer feedback on your lesson plan.</li>
+            </ul>
+          </div>
+          <div style="margin-top:14px">
+            <div style="font-size:11px;font-weight:600;margin-bottom:6px">Add your suggestion</div>
+            <textarea placeholder="Enter your suggestion..."></textarea>
+            <select style="width:100%;margin-top:8px;border:1px solid var(--rule);border-radius:7px;padding:8px;font-size:11px">
+              <option>Related skill point: S1 — Critical Thinking</option>
+              <option>Related skill point: S2 — Feedback Expression</option>
+              <option>Related skill point: S3 — Technical Literacy</option>
+            </select>
+          </div>
+        </div></div>
+      </div>
+
+      <div id="tsub-class" class="subview active">
+        <div class="card">
+          <div class="card-hd" style="background:var(--blue-bg);color:var(--blue)">📈 Collaborative Problem Solving Skills Summary</div>
+          <div class="card-body">
+            <p style="font-size:11.5px;line-height:1.7;margin-bottom:10px"><b>Communication:</b> Clear expression, questioning, and responding. Students demonstrate active listening and articulate their thoughts effectively during group discussions.</p>
+            <p style="font-size:11.5px;line-height:1.7;margin-bottom:10px"><b>Critical Thinking:</b> Identifying logical flaws in lesson plans and restructuring content. Students show ability to analyze AI-generated content and provide constructive feedback.</p>
+            <p style="font-size:11.5px;line-height:1.7;margin-bottom:10px"><b>Technical Literacy:</b> Mastering document revision and AI collaboration. Students are proficient in using AI tools, extracting text from documents, and managing file formats.</p>
+            <p style="font-size:11.5px;line-height:1.7;margin-bottom:14px"><b>Collaboration:</b> Effective task distribution and team coordination. Groups show improved ability to assign roles and maintain organized workflow.</p>
+            <div style="border:1px dashed #C9CFE0;background:#F5F6FB;border-radius:8px;padding:34px;text-align:center;color:var(--muted);font-size:11px">📊<br>Skills Distribution Chart Placeholder</div>
+            <div style="margin-top:14px">
+              <div style="font-size:11px;font-weight:600;margin-bottom:4px">Was this suggestion helpful to you?</div>
+              <div class="stars">★★★★★</div>
+              <div style="font-size:11px;font-weight:600;margin-bottom:6px">How would you revise this suggestion?</div>
+              <textarea placeholder="Share your thoughts on how to improve this suggestion..."></textarea>
+              <button class="submitbtn">Submit Feedback</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-hd" style="background:var(--orange-header);color:var(--red)">👥 CPS Challenges</div>
+          <div class="card-body">
+            <div class="accitem">
+              <div class="row"><span class="num" style="background:var(--red);color:#fff">!</span><span class="t" style="color:var(--ink)">Unclear task requirements</span><span class="chev">▼</span></div>
+              <div class="detail">Affected groups: <span class="tagpill">Group 20</span><span class="tagpill">Group 31</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-hd">💡 Suggestions for Improvement</div>
+          <div class="card-body">
+            <p style="font-size:11.5px;line-height:1.6;color:var(--muted)">Task decomposition and goal alignment, feedback template guidance, AI tool boundary education, pre-teaching of technical skills, fostering proactive collaboration culture… (more)</p>
+            <div style="margin-top:14px">
+              <div style="font-size:11px;font-weight:600;margin-bottom:4px">Was this suggestion helpful to you?</div>
+              <div class="stars">★★★★★</div>
+              <div style="font-size:11px;font-weight:600;margin-bottom:6px">How would you revise this suggestion?</div>
+              <textarea placeholder="Share your thoughts..."></textarea>
+              <button class="submitbtn">Submit Feedback</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tsub-research" class="subview">
+        <div class="card">
+          <div class="card-hd">🔍 Student Dialogue Behavior QA</div>
+          <div class="card-body">
+            <p style="font-size:11.5px;line-height:1.6"><b>Q:</b> What AI-assisted functions do students generally appreciate when writing lesson plans?</p>
+            <p style="font-size:11.5px;line-height:1.6;color:var(--muted);margin-top:6px"><b>A:</b> Students generally find AI helpful in "polishing" language, enhancing "vividness" of descriptions, and expanding content, which effectively saves writing time.</p>
+            <div style="margin-top:14px">
+              <div style="font-size:11px;font-weight:600;margin-bottom:4px">Was this suggestion helpful to you?</div>
+              <div class="stars">★★★★★</div>
+              <textarea placeholder="Share your thoughts..." style="margin-top:8px"></textarea>
+              <button class="submitbtn">Submit Feedback</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd">🤖 AI Literacy &amp; Prompt Engineering</div>
+          <div class="card-body">
+            <p style="font-size:11.5px;line-height:1.6"><b>Q:</b> How can teachers use AI prompts to design assessments that challenge students' higher-order thinking?</p>
+            <p style="font-size:11.5px;line-height:1.6;color:var(--muted);margin-top:6px"><b>A:</b> Design assessment prompts (e.g., essay questions) that require students to critically analyze the subject matter, construct logical arguments, and apply their knowledge — thus assessing critical thinking and problem-solving skills.</p>
+            <div style="margin-top:14px">
+              <div style="font-size:11px;font-weight:600;margin-bottom:4px">Was this suggestion helpful to you?</div>
+              <div class="stars">★★★★★</div>
+              <textarea placeholder="Share your thoughts..." style="margin-top:8px"></textarea>
+              <button class="submitbtn">Submit Feedback</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd">🤝 Collaborative Problem Solving Behaviors</div>
+          <div class="card-body">
+            <p style="font-size:11.5px;line-height:1.6"><b>Q:</b> What student behaviors indicate they have failed to establish common ground? What type of prompt should be used?</p>
+            <p style="font-size:11.5px;line-height:1.6;color:var(--muted);margin-top:6px"><b>A:</b> When students do not proactively express their knowledge or ideas, or do not actively try to understand others' viewpoints, it indicates a failure to establish common ground. Prompts should encourage "establishing shared understanding," such as clarification questions ("What's next?") or paraphrasing a teammate's idea ("Ok, make it heavier").</p>
+            <div style="margin-top:14px">
+              <div style="font-size:11px;font-weight:600;margin-bottom:4px">Was this suggestion helpful to you?</div>
+              <div class="stars">★★★★★</div>
+              <textarea placeholder="Share your thoughts..." style="margin-top:8px"></textarea>
+              <button class="submitbtn">Submit Feedback</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT CHAT PANEL -->
+  <div class="chatpanel">
+    <div class="hd-with-badge">
+      <div class="chat-hd" style="margin-bottom:0">
+        <div class="ic" id="chatIc">💬</div>
+        <div><div class="t" id="chatTitle">Learning Assistant</div><div class="s" id="chatSub">Ask me about your learning</div></div>
+      </div><span class="anno-badge" onclick="toggleAnno('chatrole')">i</span>
+<div class="anno-panel" id="anno-chatrole">
+  <div class="al">Design requirement</div><b>Flexible analytical representation (computational role)</b>
+  <div class="al">Component(s)</div>Human Oversight + Feedback and Dashboard
+  <div class="al">How this is realised here</div>The Learning Assistant / Teaching &amp; Research Assistant functions provided one fixed AI role per view.
+</div>
+    </div>
+    <div class="chat-bubble" id="chatBubble">I'm your learning assistant. I can help you analyze behavior data and understand collaborative skills.</div>
+    <div class="chat-input">Ask me anything…</div>
+    <div class="chat-fb">
+      <div class="q">Was this suggestion helpful?</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px"><span class="yn-btn" style="margin:0">Yes</span><span class="yn-btn" style="margin:0">No</span></div>
+      <div class="q">How accurate do you think this suggestion is?</div>
+      <div class="lmh"><span>Low</span><span>Medium</span><span>High</span></div>
+      <div class="q">How would you revise this suggestion?</div>
+      <textarea style="min-height:50px"></textarea>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function setRole(role){
+  document.getElementById('view-student').classList.toggle('active', role==='student');
+  document.getElementById('view-teacher').classList.toggle('active', role==='teacher');
+  document.getElementById('btnStudent').classList.toggle('active', role==='student');
+  document.getElementById('btnTeacher').classList.toggle('active', role==='teacher');
+  if(role==='student'){
+    document.getElementById('chatIc').style.background='var(--blue)';
+    document.getElementById('chatTitle').textContent='Learning Assistant';
+    document.getElementById('chatSub').textContent='Ask me about your learning';
+    document.getElementById('chatBubble').textContent="I'm your learning assistant. I can help you analyze behavior data and understand collaborative skills.";
+    document.getElementById('chatBubble').style.background='var(--blue-bg)';
+    document.getElementById('chatBubble').style.color='var(--blue)';
+  } else {
+    document.getElementById('chatIc').style.background='var(--amber)';
+    document.getElementById('chatTitle').textContent='Teaching & Research Assistant';
+    document.getElementById('chatSub').textContent='Ask me about teaching or research';
+    document.getElementById('chatBubble').textContent="I can help you explore teaching or research ideas.";
+    document.getElementById('chatBubble').style.background='var(--amber-bg)';
+    document.getElementById('chatBubble').style.color='var(--amber)';
+  }
+}
+function setSTab(tab){
+  document.getElementById('ssub-script').classList.toggle('active', tab==='script');
+  document.getElementById('ssub-skills').classList.toggle('active', tab==='skills');
+  document.getElementById('stab-script').className = 'tab ' + (tab==='script'?'student-active':'student-inactive');
+  document.getElementById('stab-skills').className = 'tab ' + (tab==='skills'?'student-active':'student-inactive');
+}
+function setTTab(tab){
+  ['script','class','research'].forEach(t=>{
+    document.getElementById('tsub-'+t).classList.toggle('active', t===tab);
+    document.getElementById('ttab-'+t).className = 'tab ' + (t===tab?'teacher-active':'teacher-inactive');
+  });
+}
+
+let annoOn = false;
+function toggleAnnoLayer(){
+  annoOn = !annoOn;
+  document.body.classList.toggle('anno-on', annoOn);
+  document.getElementById('annoLabel').textContent = annoOn ? 'Hide Design Analysis' : 'Show Design Analysis';
+  if(!annoOn){ document.querySelectorAll('.anno-panel.open').forEach(p=>p.classList.remove('open')); }
+}
+function toggleAnno(id){
+  const p = document.getElementById('anno-'+id);
+  if(p) p.classList.toggle('open');
+}
+</script>
+</body>
+</html>
